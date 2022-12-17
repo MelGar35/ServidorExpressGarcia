@@ -1,0 +1,38 @@
+[
+	{
+		"title": "Sahumo",
+		"description": "Sahumo de Romero y lavanda",
+		"price": 500,
+		"thumbnail": "img/sahumo.jpg",
+		"code": "AA2F",
+		"stock": 10,
+		"id": 1
+	},
+	{
+		"title": "Porta sahumo",
+		"description": "De ceramica",
+		"price": 1500,
+		"thumbnail": "img/porta.jpg",
+		"code": "AA3F",
+		"stock": 5,
+		"id": 2
+	},
+	{
+		"title": "Mazo tarot Gatitos",
+		"description": "48 cartas",
+		"price": 3500,
+		"thumbnail": "img/mazogatitos.jpg",
+		"code": "AA4F",
+		"stock": 7,
+		"id": 3
+	},
+	{
+		"title": "El tarot y el inconsciente",
+		"description": "300 paginas",
+		"price": 5000,
+		"thumbnail": "img/librotarot.jpg",
+		"code": "AA11",
+		"stock": 8,
+		"id": 4
+	}
+]
