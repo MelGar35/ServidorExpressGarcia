@@ -11,7 +11,7 @@ class ProductManager {
     }
   }
 
-  addProduct(title, description, price, thumbnail, code, stock){
+    addProduct(title, description, price, thumbnail, code, stock){
     let product = {
       title,
       description,
@@ -32,7 +32,7 @@ class ProductManager {
       console.log("El codigo ya existe, vuelva a intentarlo")
     }else{
       this.products.push(product);
-      fs.writeFileSync(this.path, JSON.stringify(this.products, null, '\t'))
+    fs.writeFileSync(this.path, JSON.stringify(this.products, null,'\t'))
     }
   }
 
