@@ -11,7 +11,7 @@ class ProductManager {
     }
   }
 
-    addProduct(title, description, price, thumbnail, code, stock){
+   addProduct(title, description, price, thumbnail, code, stock){
     let product = {
       title,
       description,
@@ -32,7 +32,7 @@ class ProductManager {
       console.log("El codigo ya existe, vuelva a intentarlo")
     }else{
       this.products.push(product);
-    fs.writeFileSync(this.path, JSON.stringify(this.products, null,'\t'))
+    fs.writeFileSync(this.path, JSON.stringify(this.products, null, '\t'))
     }
   }
 
@@ -42,7 +42,7 @@ class ProductManager {
 
 getProductById(id){
     try{
-      return this.products.filter((product)=> product.id === id)
+      return this.products.find((product)=> product.id === id)
     } catch(error){
       return "Error, id not found"
     }

@@ -3,7 +3,6 @@ import ProductManager from "./ProductManager.js"
 
 
 const app = express()
-
 app.use(express.urlencoded({extended:true}))
 
 
@@ -29,20 +28,14 @@ app.get('/products',  (request,response) => {
   })
 
 app.get("/products/:pid", async (request,response) =>{
-    const {id} = parseInt(request.params)
-    const products = await ProductManager.getProducts(id)
-    const product = products.find (prod => prod.id === id)
-
-    if(!product){
-        return response.send("Product Not Found")
-    }
-
-    response.json(product)
-
-    })
+    const pid = parseInt(request.params.pid)
+    const result = await ProductManager.getProductById(pid)
+    console.log(result)
+    response.json(result || {"Error" : "Product Not Found"})
+})
 
 app.get("*", (request,response)=>{
-    response.send("Error, Not found")
+    response.send("Error, Page not found")
 })
 
 app.listen(8080, ()=>console.log("listening on port 8080"))
