@@ -11,13 +11,15 @@ class ProductManager {
     }
   }
 
-   addProduct(title, description, price, thumbnail, code, stock){
+  async addProduct(title, description, category, price, thumbnail, code,status,stock){
     let product = {
       title,
       description,
+      category,
       price,
       thumbnail,
       code,
+      status,
       stock,
     }
 
@@ -32,7 +34,7 @@ class ProductManager {
       console.log("El codigo ya existe, vuelva a intentarlo")
     }else{
       this.products.push(product);
-    fs.writeFileSync(this.path, JSON.stringify(this.products, null, '\t'))
+    await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, '\t'))
     }
   }
 
@@ -80,15 +82,15 @@ getProductById(id){
         console.log('Product not found')
       }
     } catch (error) {
-      console.log('Error deleteProduct:', error)
+      console.log('Error delete Product:', error)
     }
   }
 
   }
 
-//Creacion de nueva instancia
 
-const product = new ProductManager("./Products.json")
+
+
 
 //Creacion de nuevos productos
 
@@ -112,6 +114,6 @@ const product = new ProductManager("./Products.json")
 //console.log(product.getProducts());
 
  
-export default new ProductManager("./Products.json")
+export default new ProductManager("./productos.json")
 
 
