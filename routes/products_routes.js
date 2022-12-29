@@ -28,10 +28,13 @@ router.get('/', (req, res) => {
 
   router.post('/', uploader.single('thumbnail'), async (req, res) => {
     const { title, description, category, price, thumbnail, code, stock } = req.body;
+    console.log(req.file);
     !req.file && res.status(400).send({status:"error", error : "No se pudo guardar la imagen"}) 
      ProductManager.addProduct(title, description,category, price, req.file.path, code, stock) 
      ? res.status(201).json({ info: "producto agregado!" }) 
      : res.status(406).json({ info: "Producto existente!" })
+
+
   })
   
   router.put('/', async (req, res) => {
