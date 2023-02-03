@@ -1,13 +1,13 @@
 import { Router } from 'express'
-import CartManager from '../utils/CartManager.js'
-import ProductManager from '../utils/ProductManager.js'
+import CartManager from '../daos/fs/CartManager.js'
+import ProductManager from '../daos/fs/ProductManager.js'
 
 const router = Router()
 
 router.get('/:cid', (req, res) => {
   const cid = parseInt(req.params.cid)
   CartManager.getCart(cid) 
-  ? res.status(200).json(CartManager.getCart(cid))
+  ? res.status(200).json(CartManager.getCarts(cid))
   : res.status(404).json({Error:"No se ha encontrado el carrito"})
 })
 
