@@ -28,5 +28,5 @@
     "url": "https://github.com/MelGar35/ServidorExpressGarcia/issues"
   },
   "homepage": "https://github.com/MelGar35/ServidorExpressGarcia#readme",
-  "description": ""
+  "description": "npm init -y; npm i express mongoose handlebars express-handlebars\r .gitIgnore node_modules\r Package json type module y dev con nombre del server.js\r Npm i @handlebars/allow-prototype-access\r Npm i mongoose-pagínate-v2"
 }

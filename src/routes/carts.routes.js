@@ -1,33 +1,91 @@
 import { Router } from 'express'
 import CartManager from '../daos/fs/CartManager.js'
-import ProductManager from '../daos/fs/ProductManager.js'
+import productsDao from '../daos/products.dao.js'
+import { cartModel } from '../models/cart.models.js'
+import cartDao from "../daos/cart.dao.js"
 
 const router = Router()
 
-router.get('/:cid', (req, res) => {
-  const cid = parseInt(req.params.cid)
-  CartManager.getCart(cid) 
-  ? res.status(200).json(CartManager.getCarts(cid))
-  : res.status(404).json({Error:"No se ha encontrado el carrito"})
-})
-
- router.post('/', (req,res) => {
-  CartManager.createCart()
-  res.status(200).send({Info: "Carrito creado"})
-}) 
-
-router.post('/:cid/product/:pid', async (req,res) => {
-  const {cid, pid} = req.params;
-  const {quantity} = req.body; 
-  // Validando si tenemos un producto en nuestra lista con el id que queremos agregar al carrito
-  let enExistencia = ProductManager.getProducts().some(el => el.id === Number(pid))
-  if (!enExistencia) res.status(404).json({"error":"El producto no se encuentra"})
-  else { 
-  await CartManager.addToCart(Number(cid),Number(pid),quantity) 
-  ? res.status(201).json({Info:`Productos agregados a carrito ${Number(cid)}`})
-  : res.status(400).json({error:"Ha ocurrido un error , indique el numero de carrito correcto"})
-
+router.get('/', async (req, res) => {
+  try {
+    res.json(await cartDao.getCarts());
+  } catch (error) {
+    res.json({ error })
   }
 })
 
-export default router
+
+router.get('/:cid', async (req, res) => {
+
+  const cid = (req.params.cid)
+  try {
+    res.json(await cartDao.getCartById(cid))
+  } catch (error) {
+    res.json({ error })
+  }
+})
+
+router.post('/', async (req, res) => {
+  try {
+    await cartDao.createCart(req.body)
+    res.json({ status: 'Success' })
+  } catch (error) {
+    res.json({ error })
+  }
+})
+
+router.put('/:cid', async (req, res) => {
+  const { cid } = req.params;
+  let enExistencia;
+  const { quantity, pid } = req.body;
+  // Validando si tenemos un producto en nuestra lista con el id que queremos agregar al carrito
+  try {
+    enExistencia = await productsDao.getProductById(pid)
+    if (!enExistencia) res.status(404).json({ "error": "El producto no encontrado" })
+    else {
+      try {
+        let product = { product: pid, quantity: quantity }
+        cartDao.updateCart(cid, product)
+        res.json({ message: 'Carrito Actualizado' })
+      } catch (error) {
+        res.json({ error })
+      }
+    }
+  } catch (error) {
+    res.json({ error })
+  }
+})
+router.put('/:cid/products/:pid', async (req, res) => {
+  const { cid, pid } = req.params;
+  const { quantity } = req.body;
+  try {
+    await cartDao.updateQuantityToCart(cid, pid, quantity)
+    res.json({ message: 'Cantidad Actualizada' })
+  } catch (error) {
+    res.json({ error })
+  }
+})
+
+
+router.delete('/:cid/products/:pid', async (req, res) => {
+  const { cid, pid } = req.params;
+  try {
+    await cartDao.deleteProductFromCart(cid, pid)
+    res.json({ status: 'success', info: 'Producto eliminado'})
+  } catch (error) {
+    res.json({ error })
+  }
+
+})
+
+router.delete('/:cid', async (req,res) => {
+  const {cid} = req.params; 
+  try {
+   await cartDao.emptyCart(cid) 
+    res.json({message:'El carrito esta vacío'})
+  } catch (error) {
+    res.json({error})
+  }
+})
+
+export default router; 

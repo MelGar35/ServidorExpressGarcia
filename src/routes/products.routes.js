@@ -1,20 +1,23 @@
 import { Router } from "express"
 import { uploader } from "../utils/multer.js"
 import productsDao from "../daos/products.dao.js"
-import { productModel } from "../models/products.models.js"
+import {productModel} from "../models/products.models.js"
+
+
 
 const router = Router()
 
-// METODO GET PARA LISTAR PRODUCTOS
+//metodo get para traer todos los productos
+
 router.get('/', async (req, res) => {
 
   let limit = parseInt(req.query.limit)
-  let query = JSON.parse(req.query.query)
+  let query = req.query.query || null
   let sort = parseInt(req.query.sort)
   let page = parseInt(req.query.page)
 
-  let result = await productDao.getProducts(limit, query, sort, page)
   try {
+    let result = await productsDao.getProducts(limit, JSON.parse(query), sort, page)
     res.json(
       {
         status: 'success',
@@ -25,11 +28,13 @@ router.get('/', async (req, res) => {
   }
 })
 
-//METODO PARA OBTENER PRODUCTO POR ID
+//metodo para traer producto por id
+
+
 router.get('/:pid', async (req, res) => {
   let pid = (req.params.pid);
   try {
-    res.json(await productDao.getProductById(pid))
+    res.json(await productsDao.getProductById(pid))
   } catch (error) {
     res.json({ error })
   }
@@ -37,13 +42,11 @@ router.get('/:pid', async (req, res) => {
 
 router.post('/', uploader.single('thumbnail'), async (req, res) => {
   const { title, description, category, price, thumbnail, code, stock } = req.body;
-  !req.file && res.status(400).send({ status: "error", error: "No se pudo guardar la imagen" })
-  let thumbnailName = req.file.filename || 'Sin Imagen';
   try {
-    let addedProduct = await productDao.createProduct({
-      title, description, category, price, thumbnailName, code, stock
+    let createdProduct = await productsDao.createProduct({
+      title, description, category, price, thumbnail, code, stock
     })
-    res.status(201).json({ info: 'Producto Agregado', addedProduct })
+    res.status(201).json({ info: 'Producto Agregado', createdProduct })
   } catch (error) {
     console.log("Ha ocurrido un error: \n", error)
     res.status(400).json({ info: `Ha ocurrido un error: ${error}` })
@@ -54,7 +57,7 @@ router.put('/:pid', async (req, res) => {
   const pid = (req.params.pid)
   const updatedValue = req.body
   try {
-    await productDao.updateProduct(pid, updatedValue)
+    await productsDao.updateProduct(pid, updatedValue)
     res.send({ status: 200, payload: updatedValue })
   } catch (error) {
     res.json({ error })
@@ -64,12 +67,11 @@ router.put('/:pid', async (req, res) => {
 router.delete('/:pid', async (req, res) => {
   let pid = (req.params.pid)
   try {
-    await productDao.deleteProduct(pid)
-    res.json({ status: 200, message: 'Producto producto eliminado' })
+    await productsDao.deleteProduct(pid)
+    res.json({ status: 200, message: 'Producto eliminado' })
   } catch (error) {
     res.json({ error })
   }
 })
 
 export default router;
-
