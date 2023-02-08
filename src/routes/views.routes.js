@@ -15,7 +15,7 @@ router.get('/products', async (req, res) => {
     let result = await productsDao.getProducts(limit, JSON.parse(query), sort, page)
     res.render('products',{result})
   } catch (error) {
-    res.json({ message: 'Ha ocurrido un error, verifique los datos ingresados' })
+    res.json({ message: 'Error, verifique los datos ingresados' })
   }
 })
 
